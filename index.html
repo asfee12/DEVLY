@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard Sistem Deployment APK</title>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #2c3e50;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+nav {
+    display: flex;
+    background-color: #34495e;
+    padding: 10px 0;
+    overflow-x: auto;
+}
+nav button {
+    background: none;
+    border: none;
+    color: #ecf0f1;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+nav button:hover, .active-nav {
+    background-color: #2980b9;
+}
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    height: calc(100vh - 70px);
+    position: fixed;
+    top: 70px;
+    left: 0;
+    overflow-y: auto;
+    padding-top: 20px;
+}
+.content {
+    margin-left: 0;
+    margin-top: 70px;
+    padding: 20px;
+    min-height: calc(100vh - 70px);
+    background-color: #ecf0f1;
+    transition: margin-left 0.3s;
+    width: calc(100% - 0px);
+}
+h2 { margin-top: 0; color: #2c3e50; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+table, th, td {
+    border: 1px solid #bdc3c7;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+button {
+    cursor: pointer;
+}
+/* Responsiveness */
+@media(max-width: 768px){
+    .sidebar {
+        width: 200px;
+    }
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+/* Notification gaya */
+#notificationContainer {
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+}
+.notification {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    max-width: 350px;
+}
+</style>
+</head>
+<body>
+
+<header>Admin Dashboard Sistem Deployment APK</header>
+
+<nav>
+    <button class="active-nav" onclick="showMain('dashboard')">Dashboard Utama</button>
+    <button onclick="showMain('monitoring')">Monitoring Sistem</button>
+    <button onclick="showMain('manajemen')">Manajemen Deployment</button>
+    <button onclick="showMain('perusahaan')">Pengelolaan Perusahaan</button>
+    <button onclick="showMain('pengujian')">Pengujian & Validasi</button>
+    <button onclick="showMain('notifikasi')">Notifikasi & Log</button>
+</nav>
+
+<div class="content" id="mainContent"></div>
+<!-- Tempat Notifikasi -->
+<div id="notificationContainer"></div>
+<!-- Tempat Error Report -->
+<div id="errorReport"></div>
+
+<script>
+const mainContent = document.getElementById('mainContent');
+
+function showMain(page) {
+    // Reset semua aktif
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-nav'));
+    event.target.classList.add('active-nav');
+
+    // Tampilkan konten utama berdasarkan halaman
+    switch(page) {
+        case 'dashboard':
+            renderDashboard();
+            break;
+        case 'monitoring':
+            renderMonitoring();
+            break;
+        case 'manajemen':
+            renderManajemen();
+            break;
+        case 'perusahaan':
+            renderPerusahaan();
+            break;
+        case 'pengujian':
+            renderPengujian();
+            break;
+        case 'notifikasi':
+            renderNotifikasi();
+            break;
+        default:
+            mainContent.innerHTML = "<h2>Halaman Tidak Ditemukan</h2>";
+    }
+}
+
+// ================== Dashboard ==================
+function renderDashboard() {
+    mainContent.innerHTML = `
+        <h2>Dashboard Utama</h2>
+        <div class="card">
+            <h3>Status Sistem</h3>
+            <p>Sistem berjalan normal. Tidak ada error kritis.</p>
+        </div>
+        <div class="card">
+            <h3>Aktivitas Terakhir</h3>
+            <ul>
+                <li>Deployment APK terbaru - 1 jam lalu</li>
+                <li>Error crash dilaporkan - 30 menit lalu</li>
+            </ul>
+        </div>
+    `;
+}
+
+// ================== Monitoring ==================
+function loadStatusDeployment() {
+    mainContent.innerHTML = `
+        <h2>Monitoring Status Deployment</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Build Version</th>
+                    <th>Status</th>
+                    <th>Target Perusahaan</th>
+                    <th>Waktu Deploy</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1.0.3</td>
+                    <td>Berhasil</td>
+                    <td>Perusahaan A</td>
+                    <td>2024-04-25 14:00</td>
+                    <td><span style="color:green;">Sukses</span></td>
+                </tr>
+                <tr>
+                    <td>1.0.4</td>
+                    <td>Gagal</td>
+                    <td>Perusahaan B</td>
+                    <td>2024-04-25 15:30</td>
+                    <td><span style="color:red;">Error</span></td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+}
+
+function loadRiwayat() {
+    mainContent.innerHTML = `
+        <h2>Riwayat Deployment</h2>
+        <table>
+            <thead>
+                <tr><th>Build</th><th>Perusahaan</th><th>Tanggal</th><th>Status</th><th>Keterangan</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1.0.2</td><td>Perusahaan A</td><td>2024-04-24</td><td>Sukses</td><td>-</td></tr>
+                <tr><td>1.0.3</td><td>Perusahaan B</td><td>2024-04-25</td><td>Gagal</td><td>Error jaringan</td></tr>
+            </tbody>
+        </table>
+    `;
+}
+
+function loadVersi() {
+    mainContent.innerHTML = `
+        <h2>Versi APK dan Rollback</h2>
+        <div class="card">
+            <h3>Versi Saat Ini</h3>
+            <p>Versi 1.0.4 - Dirilis pada 2024-04-25</p>
+        </div>
+        <div class="card">
+            <h3>Rollback</h3>
+            <button style="padding:10px 15px; background-color:#e67e22; color:white; border:none; border-radius:4px; cursor:pointer;">Rollback ke 1.0.3</button>
+            <button style="padding:10px 15px; background-color:#c0392b; color:white; border:none; border-radius:4px; cursor:pointer;">Rollback ke 1.0.2</button>
+        </div>
+    `;
+}
+
+// ================== Monitoring ==================
+function renderMonitoring() {
+    mainContent.innerHTML = `
+        <h2>Monitoring Sistem</h2>
+        <div class="card">
+            <h3>Error & Crash Report</h3>
+            <ul>
+                <li>Error: NullPointerException - Perusahaan A - 10 menit lalu</li>
+                <li>Crash: App crash on login - Perusahaan B - 20 menit lalu</li>
+            </ul>
+        </div>
+    `;
+}
+
+function loadErrorCrash() {
+    mainContent.innerHTML = `
+        <h2>Error & Crash Reports</h2>
+        <ul>
+            <li>Error: NullPointerException - Perusahaan A - 10 menit lalu</li>
+            <li>Crash: App crash on login - Perusahaan B - 20 menit lalu</li>
+        </ul>
+    `;
+}
+
+function loadLogAktivitas() {
+    mainContent.innerHTML = `
+        <h2>Log Aktivitas Sistem</h2>
+        <ul>
+            <li>2024-04-25 14:00: Deployment APK versi 1.0.3 ke Perusahaan A</li>
+            <li>2024-04-25 15:30: Deployment gagal ke Perusahaan B</li>
+            <li>2024-04-25 16:00: Sistem backup otomatis</li>
+        </ul>
+    `;
+}
+
+function loadNotifikasiOtomatis() {
+    mainContent.innerHTML = `
+        <h2>Notifikasi Otomatis</h2>
+        <p>Notifikasi error dan update dikirim otomatis ke tim dan perusahaan terkait.</p>
+    `;
+}
+
+// ================== Pengelolaan Deployment ==================
+function loadPengelolaanDeployment() {
+    mainContent.innerHTML = `
+        <h2>Manajemen Deployment</h2>
+        <div class="card">
+            <h3>Upload APK Baru</h3>
+            <button style="padding:10px 15px; background-color:#27ae60; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="triggerFileUpload()">Upload APK Baru</button>
+            <input type="file" id="apkFileInput" style="display:none;" accept=".apk" onchange="previewAPK()" />
+        </div>
+        <div class="card">
+            <h3>Pilih Target Perusahaan</h3>
+            <select style="width:100%; padding:10px; border-radius:4px;" id="targetCompanySelect">
+                <option>Perusahaan A</option>
+                <option>Perusahaan B</option>
+                <option>Perusahaan C</option>
+            </select>
+            <button style="margin-top:10px; padding:10px 15px; background-color:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="uploadAPK()">Upload dan Deploy</button>
+        </div>
+    `;
+}
+let apkToUpload = null;
+function triggerFileUpload() {
+    document.getElementById('apkFileInput').click();
+}
+function previewAPK() {
+    const fileInput = document.getElementById('apkFileInput');
+    const file = fileInput.files[0];
+    if (file) {
+        apkToUpload = file;
+        showNotification(`File APK "${file.name}" dipilih.`);
+    }
+}
+function uploadAPK() {
+    if (!apkToUpload) {
+        showError('Silakan pilih file APK terlebih dahulu.');
+        return;
+    }
+    const target = document.getElementById('targetCompanySelect').value;
+    showNotification(`APK "${apkToUpload.name}" berhasil diupload dan dikirim ke ${target}.`);
+    apkToUpload = null;
+    document.getElementById('apkFileInput').value = '';
+}
+
+// ================== Pengelolaan Perusahaan ==================
+let daftarPerusahaan = [
+    { id: 1, nama: 'Perusahaan A', alamat: 'Jakarta', akses: 'Admin, User' },
+    { id: 2, nama: 'Perusahaan B', alamat: 'Bandung', akses: 'Admin' }
+];
+
+function loadPengelolaanPerusahaan() {
+    mainContent.innerHTML = `
+        <h2>Pengelolaan Perusahaan</h2>
+        <table>
+            <thead>
+                <tr><th>Nama</th><th>Alamat</th><th>Akses</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="companyTableBody"></tbody>
+        </table>
+        <button style="margin-top:10px; padding:10px 15px; background-color:#27ae60; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="addCompany()">Tambah Perusahaan</button>
+    `;
+    const tbody = document.getElementById('companyTableBody');
+    tbody.innerHTML = '';
+    daftarPerusahaan.forEach(p => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${p.nama}</td>
+            <td>${p.alamat}</td>
+            <td>${p.akses}</td>
+            <td>
+                <button style="padding:8px 12px; background-color:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="editCompany(${p.id})">Edit</button>
+                <button style="padding:8px 12px; background-color:#c0392b; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteCompany(${p.id})">Hapus</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+function addCompany() {
+    const nama = prompt("Nama Perusahaan:");
+    if (nama) {
+        const alamat = prompt("Alamat:");
+        const akses = prompt("Hak Akses (misal: Admin, User):");
+        const id = Date.now();
+        daftarPerusahaan.push({ id, nama, alamat, akses });
+        loadPengelolaanPerusahaan();
+        showNotification("Perusahaan berhasil ditambahkan");
+    }
+}
+function editCompany(id) {
+    const p = daftarPerusahaan.find(p => p.id === id);
+    if (p) {
+        const nama = prompt("Edit Nama", p.nama);
+        const alamat = prompt("Edit Alamat", p.alamat);
+        const akses = prompt("Edit Hak Akses", p.akses);
+        if (nama && alamat && akses) {
+            p.nama = nama;
+            p.alamat = alamat;
+            p.akses = akses;
+            loadPengelolaanPerusahaan();
+            showNotification("Perusahaan berhasil diedit");
+        }
+    }
+}
+function deleteCompany(id) {
+    if (confirm("Hapus perusahaan ini?")) {
+        daftarPerusahaan = daftarPerusahaan.filter(p => p.id !== id);
+        loadPengelolaanPerusahaan();
+        showNotification("Perusahaan dihapus");
+    }
+}
+
+// ================== Pengujian & Validasi ==================
+function renderPengujian() {
+    mainContent.innerHTML = `
+        <h2>Pengujian & Validasi</h2>
+        <div class="card">
+            <h3>Upload Build</h3>
+            <input type="file" accept=".apk" id="buildFileInput" style="display:none;" onchange="previewBuild()" />
+            <button style="padding:10px 15px; background-color:#2980b9; color:white; border:none; border-radius:4px;" onclick="triggerBuildFile()">Pilih Build</button>
+            <div id="buildPreview" style="margin-top:10px;">Belum ada file terpilih.</div>
+            <button style="margin-top:10px; padding:10px 15px; background-color:#2980b9; color:white; border:none; border-radius:4px;" onclick="uploadBuild()">Upload Build</button>
+        </div>
+    `;
+}
+let buildFileData = null;
+function triggerBuildFile() {
+    document.getElementById('buildFileInput').click();
+}
+function previewBuild() {
+    const fileInput = document.getElementById('buildFileInput');
+    const file = fileInput.files[0];
+    if (file) {
+        buildFileData = file;
+        showNotification(`Build "${file.name}" dipilih.`);
+        document.getElementById('buildPreview').innerHTML = `<p>Build: ${file.name} (${(file.size/1024).toFixed(2)} KB)</p>`;
+    }
+}
+function uploadBuild() {
+    if (!buildFileData) {
+        showError('Silakan pilih file build terlebih dahulu.');
+        return;
+    }
+    showNotification(`Build "${buildFileData.name}" berhasil diupload dan diuji.`);
+    buildFileData = null;
+    document.getElementById('buildFileInput').value = '';
+    document.getElementById('buildPreview').innerHTML = 'Belum ada file terpilih.';
+}
+function loadFeedback() {
+    mainContent.innerHTML = `
+        <h2>Feedback Perusahaan</h2>
+        <textarea style="width:100%; height:100px;" placeholder="Kirim feedback..."></textarea>
+        <button style="margin-top:10px; padding:10px 15px; background-color:#2980b9; color:white; border:none; border-radius:4px;" onclick="sendFeedback()">Kirim Feedback</button>
+    `;
+}
+function sendFeedback() {
+    showNotification("Feedback terkirim");
+}
+
+// ================== Notifikasi & Grafik ==================
+function loadNotifikasi() {
+    mainContent.innerHTML = `
+        <h2>Notifikasi & Log Sistem</h2>
+        <div class="card">
+            <h3>Notifikasi ke Perusahaan</h3>
+            <p>Pengiriman otomatis selesai, semua perusahaan menerima update.</p>
+        </div>
+    `;
+}
+function renderGrafik() {
+    mainContent.innerHTML = `
+        <h2>Grafik Sistem</h2>
+        <canvas id="systemChart" width="600" height="400"></canvas>
+    `;
+    const ctx = document.getElementById('systemChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Deployment Sukses', 'Deployment Gagal', 'Error Sistem'],
+            datasets: [{
+                data: [3, 1, 2],
+                backgroundColor: ['green', 'red', 'orange']
+            }]
+        }
+    });
+}
+
+// ================== Utility ==================
+function showNotification(msg, type='success') {
+    const container = document.getElementById('notificationContainer');
+    const notif = document.createElement('div');
+    notif.innerText = msg;
+    notif.style = `
+        background-color: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: #fff;
+        padding: 15px 20px;
+        margin-top: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        cursor: default;
+        max-width: 350px;
+    `;
+    container.appendChild(notif);
+    setTimeout(() => { notif.style.opacity = 1; }, 100);
+    setTimeout(() => {
+        notif.style.opacity = 0;
+        setTimeout(() => { if (container.contains(notif)) container.removeChild(notif); }, 500);
+    }, 3000);
+}
+
+function showError(msg) {
+    const errorDiv = document.getElementById('errorReport');
+    errorDiv.innerHTML = `
+        <strong>Error:</strong> ${msg}
+        <div style="margin-top:10px; text-align:right;">
+            <button onclick="closeError()" style="background:none; border:none; color:#fff; font-weight:bold; cursor:pointer;">Tutup</button>
+        </div>
+    `;
+    errorDiv.style.display = 'block';
+}
+function closeError() {
+    document.getElementById('errorReport').style.display = 'none';
+}
+
+// ================== Inisialisasi ==================
+showMain('dashboard');
+
+</script>
+</body>
+</html>
